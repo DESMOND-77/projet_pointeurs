@@ -1,0 +1,8 @@
+Nom;Prenoms;Departement;Classe;MotDePasse;Statut
+Dupont;Jean;Informatique;GL;secret123;Etudiant
+Martin;Sophie;Informatique;GEII;prof2024;Professeur
+Bernard;Pierre;Informatique;GL;chef2024;ChefDepartement
+Durand;Marie;Mathematiques;M1;admin2024;Administratif
+Lefebvre;Luc;Direction;;dir2024;Direction
+Moreau;Emma;Physique;P1;etudiant2024;Etudiant
+Simon;Hugo;Informatique;GL;profphys;Professeur
