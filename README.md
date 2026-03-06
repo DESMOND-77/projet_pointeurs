@@ -90,7 +90,7 @@ Le système implémente cinq statuts utilisateur avec des droits d'envoi différ
             v
 +-------------------------+
 | Authentification       |
-| (Nom + Mot de passe)   |
+| (Usename + Mot de passe)   |
 +-------------------------+
             |
             v
@@ -121,7 +121,8 @@ Le système implémente cinq statuts utilisateur avec des droits d'envoi différ
 
 Le système vérifie les identifiants saisis par l'utilisateur contre une base de données CSV. Chaque utilisateur possède :
 
-- Un **nom** (identifiant unique)
+- Un **username** (identifiant unique de connexion)
+- Un **nom** (nom de famille)
 - Un **prénom**
 - Un **département** d'appartenance
 - Une **classe** (pour les étudiants)
@@ -174,7 +175,6 @@ Fafa/
 │   ├── utils.h                 # Utilitaires
 │   ├── banners.h               # Bannières d'affichage
 │   ├── os_compat.h             # Compatibilité OS
-│   └── os_compat.h             # Compatibilité OS
 │
 └── src/                        # Fichiers sources
     ├── main.c                  # Programme principal
@@ -288,19 +288,19 @@ make help
 
 ### Authentification
 
-1. Entrez votre **nom** d'utilisateur
+1. Entrez votre **username** (nom d'utilisateur)
 2. Entrez votre **mot de passe**
 3. Le système vérifie les identifiants
 
 **Comptes de test disponibles :**
 
-| Nom | Prénom | Mot de passe | Statut | Départment | Classe |
-| ----- | -------- | -------------- | -------- | ------------- | -------- |
-| Dupont | Jean | secret123 | Etudiant | Informatique | GL |
-| Martin | Sophie | prof2024 | Professeur | Informatique | - |
-| Bernard | Pierre | chef2024 | ChefDepartement | Informatique | GL |
-| Durand | Marie | admin2024 | Administratif | Mathematiques | - |
-| Lefebvre | Luc | dir2024 | Direction | Direction | - |
+| Username | Nom | Prénom | Mot de passe | Statut | Département | Classe |
+| ---------- | ----- | -------- | -------------- | -------- | ------------- | -------- |
+| jdupont | Dupont | Jean | secret123 | Etudiant | Informatique | GL |
+| smartin | Martin | Sophie | prof2024 | Professeur | Informatique | - |
+| pbernard | Bernard | Pierre | chef2024 | ChefDepartement | Informatique | GL |
+| mdurand | Durand | Marie | admin2024 | Administratif | Mathematiques | - |
+| llefebvre | Lefebvre | Luc | dir2024 | Direction | Direction | - |
 
 ### Menu Principal
 
@@ -369,8 +369,8 @@ Le système utilise des fichiers au format CSV (Comma-Separated Values) avec un 
 #### utilisateurs.csv
 
 ```text
-Nom;Prenoms;Departement;Classe;MotDePasse;Statut
-Dupont;Jean;Informatique;GL;secret123;Etudiant
+Username;Nom;Prenoms;Departement;Classe;MotDePasse;Statut
+jdupont;Dupont;Jean;Informatique;GL;secret123;Etudiant
 ```
 
 #### classes.csv

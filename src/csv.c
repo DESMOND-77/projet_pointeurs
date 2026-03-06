@@ -355,6 +355,7 @@ int lireCSV(const char* nomFichier, Utilisateur* utilisateurs[]) {
             break;
         }
         
+        nouvelUtilisateur->username = NULL;
         nouvelUtilisateur->nom = NULL;
         nouvelUtilisateur->prenoms = NULL;
         nouvelUtilisateur->departement = NULL;
@@ -363,30 +364,34 @@ int lireCSV(const char* nomFichier, Utilisateur* utilisateurs[]) {
         nouvelUtilisateur->statut = NULL;
         
         if (champs[0] != NULL && strlen(champs[0]) > 0) {
-            nouvelUtilisateur->nom = dupliquerChaine(champs[0]);
+            nouvelUtilisateur->username = dupliquerChaine(champs[0]);
         }
         
         if (champs[1] != NULL && strlen(champs[1]) > 0) {
-            nouvelUtilisateur->prenoms = dupliquerChaine(champs[1]);
+            nouvelUtilisateur->nom = dupliquerChaine(champs[1]);
         }
         
         if (champs[2] != NULL && strlen(champs[2]) > 0) {
-            nouvelUtilisateur->departement = dupliquerChaine(champs[2]);
+            nouvelUtilisateur->prenoms = dupliquerChaine(champs[2]);
         }
         
         if (champs[3] != NULL && strlen(champs[3]) > 0) {
-            nouvelUtilisateur->classe = dupliquerChaine(champs[3]);
+            nouvelUtilisateur->departement = dupliquerChaine(champs[3]);
         }
         
         if (champs[4] != NULL && strlen(champs[4]) > 0) {
-            nouvelUtilisateur->motDePasse = dupliquerChaine(champs[4]);
+            nouvelUtilisateur->classe = dupliquerChaine(champs[4]);
         }
         
         if (champs[5] != NULL && strlen(champs[5]) > 0) {
-            nouvelUtilisateur->statut = dupliquerChaine(champs[5]);
+            nouvelUtilisateur->motDePasse = dupliquerChaine(champs[5]);
         }
         
-        if (nouvelUtilisateur->nom != NULL && strlen(nouvelUtilisateur->nom) > 0) {
+        if (champs[6] != NULL && strlen(champs[6]) > 0) {
+            nouvelUtilisateur->statut = dupliquerChaine(champs[6]);
+        }
+        
+        if (nouvelUtilisateur->username != NULL && strlen(nouvelUtilisateur->username) > 0) {
             utilisateurs[nbUtilisateursLus] = nouvelUtilisateur;
             nbUtilisateursLus++;
         } else {

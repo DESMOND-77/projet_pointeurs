@@ -11,7 +11,7 @@
 /* ==================== CONSTANTES ==================== */
 #define TAILLE_MAX_LIGNE      2000
 #define MAX_UTILISATEURS      1000
-#define MAX_CHAMPS            6
+#define MAX_CHAMPS            7
 #define TAILLE_MAX_SAISIE     1000
 #define MAX_DEPARTEMENTS      10
 #define MAX_CLASSES           20
@@ -62,6 +62,7 @@ extern Classe classes[MAX_CLASSES];
 extern int nbClasses;
 
 typedef struct Utilisateur {
+    char* username;
     char* nom;
     char* prenoms;
     char* departement;

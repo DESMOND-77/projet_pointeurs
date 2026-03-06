@@ -11,7 +11,7 @@
 
 ResultatVerification verifierIdentifiants(Utilisateur* utilisateurs[], 
                                           int nbUtilisateurs,
-                                          const char* nomSaisi,
+                                          const char* usernameSaisi,
                                           const char* mdpSaisi) {
     
     ResultatVerification resultat;
@@ -19,8 +19,8 @@ ResultatVerification verifierIdentifiants(Utilisateur* utilisateurs[],
     resultat.utilisateur = NULL;
     resultat.message[0] = '\0';
     
-    if (nomSaisi == NULL || nomSaisi[0] == '\0') {
-        strcpy(resultat.message, " Le nom est obligatoire.");
+    if (usernameSaisi == NULL || usernameSaisi[0] == '\0') {
+        strcpy(resultat.message, " Le username est obligatoire.");
         return resultat;
     }
     
@@ -34,8 +34,8 @@ ResultatVerification verifierIdentifiants(Utilisateur* utilisateurs[],
         
         if (u == NULL) continue;
         
-        if (u->nom != NULL && strcmp(u->nom, nomSaisi) == 0) {
-            printf("[DEBUG] %s vs %s\t%s vs %s\n", u->nom, nomSaisi, u->motDePasse, mdpSaisi);
+        if (u->username != NULL && strcmp(u->username, usernameSaisi) == 0) {
+            printf("[DEBUG] %s vs %s\t%s vs %s\n", u->username, usernameSaisi, u->motDePasse, mdpSaisi);
             if (u->motDePasse != NULL && strcmp(u->motDePasse, mdpSaisi) == 0) {
                 resultat.trouve = 1;
                 resultat.utilisateur = u;
@@ -56,6 +56,7 @@ void afficherProfil(Utilisateur* user) {
     printf("========================================\n");
     printf("         PROFIL UTILISATEUR             \n");
     printf("========================================\n");
+    printf("Username    : %s\n", user->username ? user->username : "");
     printf("Nom complet : %s %s\n", 
            user->prenoms ? user->prenoms : "", 
            user->nom ? user->nom : "");
@@ -108,3 +109,4 @@ const char* getNomFichierDestination(TypeDestination type, const char* nom) {
     
     return chemin;
 }
+

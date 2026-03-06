@@ -610,7 +610,7 @@ int main(int argc, char *argv[])
     int nbUtilisateurs = 0;
 
     /* Buffers pour la saisie utilisateur */
-    char nomSaisi[TAILLE_MAX_SAISIE];
+    char usernameSaisi[TAILLE_MAX_SAISIE];
     char mdpSaisi[TAILLE_MAX_SAISIE];
 
     /* Variables pour la boucle de connexion */
@@ -655,11 +655,11 @@ int main(int argc, char *argv[])
         printf("Connexion - Tentative %d/%d\n", tentative + 1, MAX_TENTATIVES);
 
         /* Saisie des identifiants */
-        saisirChaine("Nom: ", nomSaisi, sizeof(nomSaisi));
+        saisirChaine("Username: ", usernameSaisi, sizeof(usernameSaisi));
         saisirChaine("Mot de passe: ", mdpSaisi, sizeof(mdpSaisi));
 
         /* Verification des identifiants */
-        resultat = verifierIdentifiants(tableauUtilisateurs, nbUtilisateurs, nomSaisi, mdpSaisi);
+        resultat = verifierIdentifiants(tableauUtilisateurs, nbUtilisateurs, usernameSaisi, mdpSaisi);
 
         /* Affichage du resultat */
         printf("\n%s\n", resultat.message);

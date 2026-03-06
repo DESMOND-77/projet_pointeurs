@@ -1,8 +1,9 @@
-Nom;Prenoms;Departement;Classe;MotDePasse;Statut
-Dupont;Jean;Informatique;GL;secret123;Etudiant
-Martin;Sophie;Informatique;GEII;prof2024;Professeur
-Bernard;Pierre;Informatique;GL;chef2024;ChefDepartement
-Durand;Marie;Mathematiques;M1;admin2024;Administratif
-Lefebvre;Luc;Direction;;dir2024;Direction
-Moreau;Emma;Physique;P1;etudiant2024;Etudiant
-Simon;Hugo;Informatique;GL;profphys;Professeur
+Username;Nom;Prenoms;Departement;Classe;MotDePasse;Statut
+jdupont;Dupont;Jean;Informatique;gl_1;secret123;Etudiant
+smartin;Martin;Sophie;Informatique;-;prof2024;Professeur
+pbernard;Bernard;Pierre;Informatique;-;chef2024;ChefDepartement
+mdurand;Durand;Marie;Mathematiques;m-;admin2024;Administratif
+llefebvre;Lefebvre;Luc;Direction;-;dir2024;Direction
+emoreau;Moreau;Emma;Physique;pgim_3;etudiant2024;Etudiant
+hsimon;Simon;Hugo;Informatique;-;profphys;Professeur
+
