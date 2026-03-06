@@ -24,35 +24,41 @@ static const char *FICHIER_CSV = "data/utilisateurs.csv";
 /**
  * Parse les entrees separees par des virgules
  */
-static int parserEntreesLocal(const char* saisie, char entrees[][50], int maxEntrees) {
-    if (saisie == NULL || entrees == NULL || maxEntrees <= 0) {
+static int parserEntreesLocal(const char *saisie, char entrees[][50], int maxEntrees)
+{
+    if (saisie == NULL || entrees == NULL || maxEntrees <= 0)
+    {
         return 0;
     }
-    
+
     char copie[TAILLE_MAX_SAISIE];
     strncpy(copie, saisie, sizeof(copie) - 1);
     copie[sizeof(copie) - 1] = '\0';
-    
+
     int count = 0;
-    char* token = strtok(copie, ",");
-    
-    while (token != NULL && count < maxEntrees) {
+    char *token = strtok(copie, ",");
+
+    while (token != NULL && count < maxEntrees)
+    {
         /* Supprimer les espaces */
-        while (isspace((unsigned char)*token)) token++;
-        char* fin = token + strlen(token) - 1;
-        while (fin > token && isspace((unsigned char)*fin)) {
+        while (isspace((unsigned char)*token))
+            token++;
+        char *fin = token + strlen(token) - 1;
+        while (fin > token && isspace((unsigned char)*fin))
+        {
             *fin = '\0';
             fin--;
         }
-        
-        if (strlen(token) > 0) {
+
+        if (strlen(token) > 0)
+        {
             strncpy(entrees[count], token, 49);
             entrees[count][49] = '\0';
             count++;
         }
         token = strtok(NULL, ",");
     }
-    
+
     return count;
 }
 
@@ -96,12 +102,12 @@ void initialiserFichiers(void)
 #endif
 
     /* Creer les fichiers de base */
-    creerFichierSiInexistant("data/direction.txt");
-    creerFichierSiInexistant("data/departement_informatique.txt");
-    creerFichierSiInexistant("data/departement_mathematiques.txt");
-    creerFichierSiInexistant("data/departement_physique.txt");
-    creerFichierSiInexistant("data/classe_gl.txt");
-    creerFichierSiInexistant("data/classe_geii.txt");
+    // creerFichierSiInexistant("data/direction.txt");
+    // creerFichierSiInexistant("data/departement_informatique.txt");
+    // creerFichierSiInexistant("data/departement_mathematiques.txt");
+    // creerFichierSiInexistant("data/departement_physique.txt");
+    // creerFichierSiInexistant("data/classe_gl.txt");
+    // creerFichierSiInexistant("data/classe_geii.txt");
 }
 
 /**
@@ -142,7 +148,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
     StatutUtilisateur statut = getStatutFromString(utilisateur->statut);
 
     /* Afficher les destinataires disponibles */
-    listerDestinataires(statut, utilisateur->departement, utilisateur->classe);
+    // listerDestinataires(statut, utilisateur->departement, utilisateur->classe);
 
     /* Saisie du message */
     char message[TAILLE_MAX_SAISIE];
@@ -182,7 +188,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
         printf("1. Classe(s) specifique(s)\n");
         printf("2. Departement(s)\n");
         int choixP = saisirEntier("Choix: ", 0, 2);
-        
+
         if (choixP == 1)
         {
             /* Classe(s) specifique(s) - format: filiere_niveau (ex: grt_2,em_4) */
@@ -190,10 +196,10 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
             char classesSaisies[TAILLE_MAX_SAISIE];
             char entrees[20][50];
             saisirChaine("> ", classesSaisies, sizeof(classesSaisies));
-            
+
             int nbEntrees = parserEntrees(classesSaisies, entrees, 20);
             int classesValides = 0;
-            
+
             for (int i = 0; i < nbEntrees; i++)
             {
                 if (verifierClasse(entrees[i]))
@@ -208,7 +214,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
                     printf("Classe '%s' introuvable.\n", entrees[i]);
                 }
             }
-            
+
             if (classesValides == 0)
             {
                 printf("Aucune classe valide specifiee.\n");
@@ -218,14 +224,14 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
         else if (choixP == 2)
         {
             /* Departement(s) - format: dept_filiere (ex: dept_grt,dept_gim) */
-            printf("Entrez le(s) nom(s) de departement(s) separes par des virgules (ex: dept_informatique,dept_mathematiques):\n");
+            printf("Entrez le(s) nom(s) de departement(s) separes par des virgules (ex: informatique,mathematiques):\n");
             char depsSaisis[TAILLE_MAX_SAISIE];
             char entrees[20][50];
             saisirChaine("> ", depsSaisis, sizeof(depsSaisis));
-            
+
             int nbEntrees = parserEntrees(depsSaisis, entrees, 20);
             int depsValides = 0;
-            
+
             for (int i = 0; i < nbEntrees; i++)
             {
                 if (verifierDepartement(entrees[i]))
@@ -240,7 +246,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
                     printf("Departement '%s' introuvable.\n", entrees[i]);
                 }
             }
-            
+
             if (depsValides == 0)
             {
                 printf("Aucun departement valide specifie.\n");
@@ -254,14 +260,14 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
         printf("2. Departement(s) d'une direction\n");
         printf("3. Classe(s) d'un departement\n");
         int choixCD = saisirEntier("Choix: ", 0, 3);
-        
+
         if (choixCD == 1)
         {
             /* Direction - user specifies direction name */
             printf("Entrez le nom de la direction:\n");
             char directionSaisie[50];
             saisirChaine("> ", directionSaisie, sizeof(directionSaisie));
-            
+
             if (verifierDirection(directionSaisie))
             {
                 destinations[nbDestinations].type = TYPE_DIRECTION;
@@ -279,18 +285,18 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
             printf("Entrez le nom de la direction:\n");
             char directionSaisie[50];
             saisirChaine("> ", directionSaisie, sizeof(directionSaisie));
-            
+
             if (!verifierDirection(directionSaisie))
             {
                 printf("Direction '%s' introuvable.\n", directionSaisie);
                 break;
             }
-            
+
             printf("Entrez le(s) departement(s) ou 'tous' pour tous les departements de cette direction:\n");
             char depsSaisis[TAILLE_MAX_SAISIE];
             char entrees[20][50];
             saisirChaine("> ", depsSaisis, sizeof(depsSaisis));
-            
+
             if (strcmp(depsSaisis, "tous") == 0 || strcmp(depsSaisis, "Tous") == 0)
             {
                 /* Tous les departements de la direction */
@@ -306,7 +312,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
             {
                 int nbEntrees = parserEntrees(depsSaisis, entrees, 20);
                 int depsValides = 0;
-                
+
                 for (int i = 0; i < nbEntrees; i++)
                 {
                     if (verifierDepartement(entrees[i]))
@@ -321,7 +327,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
                         printf("Departement '%s' introuvable.\n", entrees[i]);
                     }
                 }
-                
+
                 if (depsValides == 0)
                 {
                     printf("Aucun departement valide specifie.\n");
@@ -335,18 +341,18 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
             printf("Entrez le nom du departement:\n");
             char deptSaisie[50];
             saisirChaine("> ", deptSaisie, sizeof(deptSaisie));
-            
+
             if (!verifierDepartement(deptSaisie))
             {
                 printf("Departement '%s' introuvable.\n", deptSaisie);
                 break;
             }
-            
+
             printf("Entrez le(s) classe(s) ou 'toutes' pour toutes les classes de ce departement:\n");
             char classesSaisies[TAILLE_MAX_SAISIE];
             char entrees[20][50];
             saisirChaine("> ", classesSaisies, sizeof(classesSaisies));
-            
+
             if (strcmp(classesSaisies, "toutes") == 0 || strcmp(classesSaisies, "Toutes") == 0)
             {
                 /* Toutes les classes du departement */
@@ -362,7 +368,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
             {
                 int nbEntrees = parserEntrees(classesSaisies, entrees, 20);
                 int classesValides = 0;
-                
+
                 for (int i = 0; i < nbEntrees; i++)
                 {
                     if (verifierClasse(entrees[i]))
@@ -377,7 +383,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
                         printf("Classe '%s' introuvable.\n", entrees[i]);
                     }
                 }
-                
+
                 if (classesValides == 0)
                 {
                     printf("Aucune classe valide specifiee.\n");
@@ -393,14 +399,14 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
         printf("2. Departement(s) d'une direction\n");
         printf("3. Classe(s) d'un departement\n");
         int choixA = saisirEntier("Choix: ", 0, 3);
-        
+
         if (choixA == 1)
         {
             /* Direction - user specifies direction name */
             printf("Entrez le nom de la direction:\n");
             char directionSaisie[50];
             saisirChaine("> ", directionSaisie, sizeof(directionSaisie));
-            
+
             if (verifierDirection(directionSaisie))
             {
                 destinations[nbDestinations].type = TYPE_DIRECTION;
@@ -418,18 +424,18 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
             printf("Entrez le nom de la direction:\n");
             char directionSaisie[50];
             saisirChaine("> ", directionSaisie, sizeof(directionSaisie));
-            
+
             if (!verifierDirection(directionSaisie))
             {
                 printf("Direction '%s' introuvable.\n", directionSaisie);
                 break;
             }
-            
+
             printf("Entrez le(s) departement(s) ou 'tous' pour tous les departements de cette direction:\n");
             char depsSaisis[TAILLE_MAX_SAISIE];
             char entrees[20][50];
             saisirChaine("> ", depsSaisis, sizeof(depsSaisis));
-            
+
             if (strcmp(depsSaisis, "tous") == 0 || strcmp(depsSaisis, "Tous") == 0)
             {
                 /* Tous les departements de la direction */
@@ -445,7 +451,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
             {
                 int nbEntrees = parserEntrees(depsSaisis, entrees, 20);
                 int depsValides = 0;
-                
+
                 for (int i = 0; i < nbEntrees; i++)
                 {
                     if (verifierDepartement(entrees[i]))
@@ -460,7 +466,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
                         printf("Departement '%s' introuvable.\n", entrees[i]);
                     }
                 }
-                
+
                 if (depsValides == 0)
                 {
                     printf("Aucun departement valide specifie.\n");
@@ -474,18 +480,18 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
             printf("Entrez le nom du departement:\n");
             char deptSaisie[50];
             saisirChaine("> ", deptSaisie, sizeof(deptSaisie));
-            
+
             if (!verifierDepartement(deptSaisie))
             {
                 printf("Departement '%s' introuvable.\n", deptSaisie);
                 break;
             }
-            
+
             printf("Entrez le(s) classe(s) ou 'toutes' pour toutes les classes de ce departement:\n");
             char classesSaisies[TAILLE_MAX_SAISIE];
             char entrees[20][50];
             saisirChaine("> ", classesSaisies, sizeof(classesSaisies));
-            
+
             if (strcmp(classesSaisies, "toutes") == 0 || strcmp(classesSaisies, "Toutes") == 0)
             {
                 /* Toutes les classes du departement */
@@ -501,7 +507,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
             {
                 int nbEntrees = parserEntrees(classesSaisies, entrees, 20);
                 int classesValides = 0;
-                
+
                 for (int i = 0; i < nbEntrees; i++)
                 {
                     if (verifierClasse(entrees[i]))
@@ -516,7 +522,7 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
                         printf("Classe '%s' introuvable.\n", entrees[i]);
                     }
                 }
-                
+
                 if (classesValides == 0)
                 {
                     printf("Aucune classe valide specifiee.\n");

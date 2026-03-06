@@ -31,12 +31,12 @@ run: $(TARGET)
 # Creation des repertoires et fichiers
 setup:
 	mkdir -p data
-	touch data/direction.txt
-	touch data/departement_informatique.txt
-	touch data/departement_mathematiques.txt
-	touch data/departement_physique.txt
-	touch data/classe_gl.txt
-	touch data/classe_geii.txt
+# 	touch data/direction.txt
+# 	touch data/departement_informatique.txt
+# 	touch data/departement_mathematiques.txt
+# 	touch data/departement_physique.txt
+# 	touch data/classe_gl.txt
+# 	touch data/classe_geii.txt
 
 # Aide
 help:

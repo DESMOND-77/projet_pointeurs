@@ -104,7 +104,9 @@ int sauvegarderMessage(Message* msg, Destination* dest) {
     const char* fichier = NULL;
     
     if (dest->type == TYPE_DIRECTION) {
-        fichier = "data/direction.txt";
+        static char chemin[150];
+        snprintf(chemin, sizeof(chemin), "data/direction_%s.txt", dest->nom);
+        fichier = chemin;
     } else if (dest->type == TYPE_DEPARTEMENT) {
         static char chemin[150];
         snprintf(chemin, sizeof(chemin), "data/departement_%s.txt", dest->nom);

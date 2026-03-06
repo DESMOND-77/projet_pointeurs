@@ -1,8 +1,7 @@
 nom;direction
-dept_informatique;direction_generale
-dept_mathematiques;direction_generale
-dept_physique;direction_generale
-dept_gl;direction_des_etudes
-dept_geii;direction_des_etudes
-dept_gim;direction_des_etudes
-
+informatique;direction_generale
+mathematiques;direction_generale
+physique;direction_generale
+gl;direction_des_etudes
+geii;direction_des_etudes
+gim;direction_des_etudes
