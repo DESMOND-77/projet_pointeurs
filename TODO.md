@@ -33,13 +33,34 @@
 
 ---
 
-# STATUT: TOUTES LES TÂCHES TERMINÉES ✓
+## NOUVELLES TÂCHES: Chargement CSV et Modification des Menus
 
-Le projet est complet et fonctionnel. Toutes les phases ont été implémentées:
+### Step 1: Create CSV data files
+- [x] Create data/directions.csv with header: nom
+- [x] Create data/departements.csv with header: nom;direction
+- [x] Create data/classes.csv with header: nom;departement
 
-- **Structure**: Dossiers include/, src/, data/ avec tous les fichiers nécessaires
-- **En-têtes**: 8 fichiers .h (types.h, memoire.h, utils.h, csv.h, auth.h, messagerie.h, banners.h, os_compat.h)
-- **Implémentation**: 8 fichiers source .c
-- **Compilation**: Le projet compile sans erreur (sauf quelques warnings mineurs)
-- **Fonctionnalités**: Système de messagerie complet avec authentification, permissions, envoi et lecture de messages
+### Step 2: Update types.h
+- [x] Add global array declarations for directions, departements, classes
+- [x] Add number counters for each array
+
+### Step 3: Update csv.h
+- [x] Add function declarations for loading CSV data
+
+### Step 4: Implement CSV loading in csv.c
+- [x] Implement chargerDirections()
+- [x] Implement chargerDepartements()
+- [x] Implement chargerClasses()
+- [x] Add validation functions
+
+### Step 5: Update main.c
+- [x] Load CSV data at startup
+- [x] Modify professor menu options and add validation
+- [x] Modify chef departement menu options and add validation
+- [x] Modify administratif menu options and add validation
+- [x] Modify direction menu options and add validation
+
+---
+
+# STATUT: EN COURS
 

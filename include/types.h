@@ -41,14 +41,27 @@ typedef struct {
 
 typedef struct {
     char nom[50];
-    char direction[20];
+    char direction[50];
 } Departement;
 
 typedef struct {
-    char nom[20];
+    char nom[50];
 } Direction;
 
-typedef struct {
+/* Forward declaration */
+typedef struct Utilisateur Utilisateur;
+
+/* Tableaux globaux pour les donnees chargees depuis les CSV */
+extern Direction directions[MAX_DEPARTEMENTS];
+extern int nbDirections;
+
+extern Departement departements[MAX_DEPARTEMENTS];
+extern int nbDepartements;
+
+extern Classe classes[MAX_CLASSES];
+extern int nbClasses;
+
+typedef struct Utilisateur {
     char* nom;
     char* prenoms;
     char* departement;

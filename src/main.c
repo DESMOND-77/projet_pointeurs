@@ -22,6 +22,41 @@
 static const char *FICHIER_CSV = "data/utilisateurs.csv";
 
 /**
+ * Parse les entrees separees par des virgules
+ */
+static int parserEntreesLocal(const char* saisie, char entrees[][50], int maxEntrees) {
+    if (saisie == NULL || entrees == NULL || maxEntrees <= 0) {
+        return 0;
+    }
+    
+    char copie[TAILLE_MAX_SAISIE];
+    strncpy(copie, saisie, sizeof(copie) - 1);
+    copie[sizeof(copie) - 1] = '\0';
+    
+    int count = 0;
+    char* token = strtok(copie, ",");
+    
+    while (token != NULL && count < maxEntrees) {
+        /* Supprimer les espaces */
+        while (isspace((unsigned char)*token)) token++;
+        char* fin = token + strlen(token) - 1;
+        while (fin > token && isspace((unsigned char)*fin)) {
+            *fin = '\0';
+            fin--;
+        }
+        
+        if (strlen(token) > 0) {
+            strncpy(entrees[count], token, 49);
+            entrees[count][49] = '\0';
+            count++;
+        }
+        token = strtok(NULL, ",");
+    }
+    
+    return count;
+}
+
+/**
  * Cree un utilisateur de test en cas d'absence de fichier CSV
  */
 int creerUtilisateurTest(Utilisateur *utilisateurs[])
@@ -144,87 +179,350 @@ void gererEnvoiMessage(Utilisateur *utilisateur)
         break;
 
     case STATUT_PROFESSEUR:
-        printf("1. Ma classe (%s)\n", utilisateur->classe ? utilisateur->classe : "Non defini");
-        printf("2. Mon departement (%s)\n", utilisateur->departement ? utilisateur->departement : "Non defini");
-        printf("3. Autre departement\n");
-        int choixP = saisirEntier("Choix: ", 0, 3);
-        if (choixP >= 1 && utilisateur->classe != NULL)
+        printf("1. Classe(s) specifique(s)\n");
+        printf("2. Departement(s)\n");
+        int choixP = saisirEntier("Choix: ", 0, 2);
+        
+        if (choixP == 1)
         {
-            destinations[nbDestinations].type = TYPE_CLASSE;
-            strcpy(destinations[nbDestinations].nom, utilisateur->classe);
-            nbDestinations++;
+            /* Classe(s) specifique(s) - format: filiere_niveau (ex: grt_2,em_4) */
+            printf("Entrez le(s) nom(s) de classe(s) separes par des virgules (ex: gl_2,geii_4):\n");
+            char classesSaisies[TAILLE_MAX_SAISIE];
+            char entrees[20][50];
+            saisirChaine("> ", classesSaisies, sizeof(classesSaisies));
+            
+            int nbEntrees = parserEntrees(classesSaisies, entrees, 20);
+            int classesValides = 0;
+            
+            for (int i = 0; i < nbEntrees; i++)
+            {
+                if (verifierClasse(entrees[i]))
+                {
+                    destinations[nbDestinations].type = TYPE_CLASSE;
+                    strcpy(destinations[nbDestinations].nom, entrees[i]);
+                    nbDestinations++;
+                    classesValides++;
+                }
+                else
+                {
+                    printf("Classe '%s' introuvable.\n", entrees[i]);
+                }
+            }
+            
+            if (classesValides == 0)
+            {
+                printf("Aucune classe valide specifiee.\n");
+                nbDestinations = 0;
+            }
         }
-        if (choixP == 2 && utilisateur->departement != NULL)
+        else if (choixP == 2)
         {
-            destinations[nbDestinations].type = TYPE_DEPARTEMENT;
-            strcpy(destinations[nbDestinations].nom, utilisateur->departement);
-            nbDestinations++;
-        }
-        if (choixP == 3)
-        {
-            printf("Entrez le nom du departement: ");
-            char dep[50];
-            saisirChaine("> ", dep, sizeof(dep));
-            destinations[nbDestinations].type = TYPE_DEPARTEMENT;
-            strcpy(destinations[nbDestinations].nom, dep);
-            nbDestinations++;
+            /* Departement(s) - format: dept_filiere (ex: dept_grt,dept_gim) */
+            printf("Entrez le(s) nom(s) de departement(s) separes par des virgules (ex: dept_informatique,dept_mathematiques):\n");
+            char depsSaisis[TAILLE_MAX_SAISIE];
+            char entrees[20][50];
+            saisirChaine("> ", depsSaisis, sizeof(depsSaisis));
+            
+            int nbEntrees = parserEntrees(depsSaisis, entrees, 20);
+            int depsValides = 0;
+            
+            for (int i = 0; i < nbEntrees; i++)
+            {
+                if (verifierDepartement(entrees[i]))
+                {
+                    destinations[nbDestinations].type = TYPE_DEPARTEMENT;
+                    strcpy(destinations[nbDestinations].nom, entrees[i]);
+                    nbDestinations++;
+                    depsValides++;
+                }
+                else
+                {
+                    printf("Departement '%s' introuvable.\n", entrees[i]);
+                }
+            }
+            
+            if (depsValides == 0)
+            {
+                printf("Aucun departement valide specifie.\n");
+                nbDestinations = 0;
+            }
         }
         break;
 
     case STATUT_CHEF_DEP:
         printf("1. Direction\n");
-        printf("2. Tous les departements\n");
-        printf("3. Classes du departement\n");
+        printf("2. Departement(s) d'une direction\n");
+        printf("3. Classe(s) d'un departement\n");
         int choixCD = saisirEntier("Choix: ", 0, 3);
+        
         if (choixCD == 1)
         {
-            destinations[nbDestinations].type = TYPE_DIRECTION;
-            strcpy(destinations[nbDestinations].nom, "generale");
-            nbDestinations++;
+            /* Direction - user specifies direction name */
+            printf("Entrez le nom de la direction:\n");
+            char directionSaisie[50];
+            saisirChaine("> ", directionSaisie, sizeof(directionSaisie));
+            
+            if (verifierDirection(directionSaisie))
+            {
+                destinations[nbDestinations].type = TYPE_DIRECTION;
+                strcpy(destinations[nbDestinations].nom, directionSaisie);
+                nbDestinations++;
+            }
+            else
+            {
+                printf("Direction '%s' introuvable.\n", directionSaisie);
+            }
         }
-        if (choixCD == 2)
+        else if (choixCD == 2)
         {
-            destinations[nbDestinations].type = TYPE_DEPARTEMENT;
-            strcpy(destinations[nbDestinations].nom, "informatique");
-            nbDestinations++;
-            destinations[nbDestinations].type = TYPE_DEPARTEMENT;
-            strcpy(destinations[nbDestinations].nom, "mathematiques");
-            nbDestinations++;
-            destinations[nbDestinations].type = TYPE_DEPARTEMENT;
-            strcpy(destinations[nbDestinations].nom, "physique");
-            nbDestinations++;
+            /* Departement(s) d'une direction */
+            printf("Entrez le nom de la direction:\n");
+            char directionSaisie[50];
+            saisirChaine("> ", directionSaisie, sizeof(directionSaisie));
+            
+            if (!verifierDirection(directionSaisie))
+            {
+                printf("Direction '%s' introuvable.\n", directionSaisie);
+                break;
+            }
+            
+            printf("Entrez le(s) departement(s) ou 'tous' pour tous les departements de cette direction:\n");
+            char depsSaisis[TAILLE_MAX_SAISIE];
+            char entrees[20][50];
+            saisirChaine("> ", depsSaisis, sizeof(depsSaisis));
+            
+            if (strcmp(depsSaisis, "tous") == 0 || strcmp(depsSaisis, "Tous") == 0)
+            {
+                /* Tous les departements de la direction */
+                int nbDepts = getDepartementsParDirection(directionSaisie, entrees, 20);
+                for (int i = 0; i < nbDepts; i++)
+                {
+                    destinations[nbDestinations].type = TYPE_DEPARTEMENT;
+                    strcpy(destinations[nbDestinations].nom, entrees[i]);
+                    nbDestinations++;
+                }
+            }
+            else
+            {
+                int nbEntrees = parserEntrees(depsSaisis, entrees, 20);
+                int depsValides = 0;
+                
+                for (int i = 0; i < nbEntrees; i++)
+                {
+                    if (verifierDepartement(entrees[i]))
+                    {
+                        destinations[nbDestinations].type = TYPE_DEPARTEMENT;
+                        strcpy(destinations[nbDestinations].nom, entrees[i]);
+                        nbDestinations++;
+                        depsValides++;
+                    }
+                    else
+                    {
+                        printf("Departement '%s' introuvable.\n", entrees[i]);
+                    }
+                }
+                
+                if (depsValides == 0)
+                {
+                    printf("Aucun departement valide specifie.\n");
+                    nbDestinations = 0;
+                }
+            }
         }
-        if (choixCD == 3 && utilisateur->departement != NULL)
+        else if (choixCD == 3)
         {
-            destinations[nbDestinations].type = TYPE_CLASSE;
-            strcpy(destinations[nbDestinations].nom, "gl");
-            nbDestinations++;
+            /* Classe(s) d'un departement */
+            printf("Entrez le nom du departement:\n");
+            char deptSaisie[50];
+            saisirChaine("> ", deptSaisie, sizeof(deptSaisie));
+            
+            if (!verifierDepartement(deptSaisie))
+            {
+                printf("Departement '%s' introuvable.\n", deptSaisie);
+                break;
+            }
+            
+            printf("Entrez le(s) classe(s) ou 'toutes' pour toutes les classes de ce departement:\n");
+            char classesSaisies[TAILLE_MAX_SAISIE];
+            char entrees[20][50];
+            saisirChaine("> ", classesSaisies, sizeof(classesSaisies));
+            
+            if (strcmp(classesSaisies, "toutes") == 0 || strcmp(classesSaisies, "Toutes") == 0)
+            {
+                /* Toutes les classes du departement */
+                int nbClasses = getClassesParDepartement(deptSaisie, entrees, 20);
+                for (int i = 0; i < nbClasses; i++)
+                {
+                    destinations[nbDestinations].type = TYPE_CLASSE;
+                    strcpy(destinations[nbDestinations].nom, entrees[i]);
+                    nbDestinations++;
+                }
+            }
+            else
+            {
+                int nbEntrees = parserEntrees(classesSaisies, entrees, 20);
+                int classesValides = 0;
+                
+                for (int i = 0; i < nbEntrees; i++)
+                {
+                    if (verifierClasse(entrees[i]))
+                    {
+                        destinations[nbDestinations].type = TYPE_CLASSE;
+                        strcpy(destinations[nbDestinations].nom, entrees[i]);
+                        nbDestinations++;
+                        classesValides++;
+                    }
+                    else
+                    {
+                        printf("Classe '%s' introuvable.\n", entrees[i]);
+                    }
+                }
+                
+                if (classesValides == 0)
+                {
+                    printf("Aucune classe valide specifiee.\n");
+                    nbDestinations = 0;
+                }
+            }
         }
         break;
 
     case STATUT_ADMINISTRATIF:
     case STATUT_DIRECTION:
         printf("1. Direction\n");
-        printf("2. Tous les departements\n");
-        printf("3. Toutes les classes\n");
+        printf("2. Departement(s) d'une direction\n");
+        printf("3. Classe(s) d'un departement\n");
         int choixA = saisirEntier("Choix: ", 0, 3);
-        if (choixA >= 1)
+        
+        if (choixA == 1)
         {
-            destinations[nbDestinations].type = TYPE_DIRECTION;
-            strcpy(destinations[nbDestinations].nom, "generale");
-            nbDestinations++;
+            /* Direction - user specifies direction name */
+            printf("Entrez le nom de la direction:\n");
+            char directionSaisie[50];
+            saisirChaine("> ", directionSaisie, sizeof(directionSaisie));
+            
+            if (verifierDirection(directionSaisie))
+            {
+                destinations[nbDestinations].type = TYPE_DIRECTION;
+                strcpy(destinations[nbDestinations].nom, directionSaisie);
+                nbDestinations++;
+            }
+            else
+            {
+                printf("Direction '%s' introuvable.\n", directionSaisie);
+            }
         }
-        if (choixA >= 2)
+        else if (choixA == 2)
         {
-            destinations[nbDestinations].type = TYPE_DEPARTEMENT;
-            strcpy(destinations[nbDestinations].nom, "tous");
-            nbDestinations++;
+            /* Departement(s) d'une direction */
+            printf("Entrez le nom de la direction:\n");
+            char directionSaisie[50];
+            saisirChaine("> ", directionSaisie, sizeof(directionSaisie));
+            
+            if (!verifierDirection(directionSaisie))
+            {
+                printf("Direction '%s' introuvable.\n", directionSaisie);
+                break;
+            }
+            
+            printf("Entrez le(s) departement(s) ou 'tous' pour tous les departements de cette direction:\n");
+            char depsSaisis[TAILLE_MAX_SAISIE];
+            char entrees[20][50];
+            saisirChaine("> ", depsSaisis, sizeof(depsSaisis));
+            
+            if (strcmp(depsSaisis, "tous") == 0 || strcmp(depsSaisis, "Tous") == 0)
+            {
+                /* Tous les departements de la direction */
+                int nbDepts = getDepartementsParDirection(directionSaisie, entrees, 20);
+                for (int i = 0; i < nbDepts; i++)
+                {
+                    destinations[nbDestinations].type = TYPE_DEPARTEMENT;
+                    strcpy(destinations[nbDestinations].nom, entrees[i]);
+                    nbDestinations++;
+                }
+            }
+            else
+            {
+                int nbEntrees = parserEntrees(depsSaisis, entrees, 20);
+                int depsValides = 0;
+                
+                for (int i = 0; i < nbEntrees; i++)
+                {
+                    if (verifierDepartement(entrees[i]))
+                    {
+                        destinations[nbDestinations].type = TYPE_DEPARTEMENT;
+                        strcpy(destinations[nbDestinations].nom, entrees[i]);
+                        nbDestinations++;
+                        depsValides++;
+                    }
+                    else
+                    {
+                        printf("Departement '%s' introuvable.\n", entrees[i]);
+                    }
+                }
+                
+                if (depsValides == 0)
+                {
+                    printf("Aucun departement valide specifie.\n");
+                    nbDestinations = 0;
+                }
+            }
         }
-        if (choixA == 3)
+        else if (choixA == 3)
         {
-            destinations[nbDestinations].type = TYPE_CLASSE;
-            strcpy(destinations[nbDestinations].nom, "toutes");
-            nbDestinations++;
+            /* Classe(s) d'un departement */
+            printf("Entrez le nom du departement:\n");
+            char deptSaisie[50];
+            saisirChaine("> ", deptSaisie, sizeof(deptSaisie));
+            
+            if (!verifierDepartement(deptSaisie))
+            {
+                printf("Departement '%s' introuvable.\n", deptSaisie);
+                break;
+            }
+            
+            printf("Entrez le(s) classe(s) ou 'toutes' pour toutes les classes de ce departement:\n");
+            char classesSaisies[TAILLE_MAX_SAISIE];
+            char entrees[20][50];
+            saisirChaine("> ", classesSaisies, sizeof(classesSaisies));
+            
+            if (strcmp(classesSaisies, "toutes") == 0 || strcmp(classesSaisies, "Toutes") == 0)
+            {
+                /* Toutes les classes du departement */
+                int nbClasses = getClassesParDepartement(deptSaisie, entrees, 20);
+                for (int i = 0; i < nbClasses; i++)
+                {
+                    destinations[nbDestinations].type = TYPE_CLASSE;
+                    strcpy(destinations[nbDestinations].nom, entrees[i]);
+                    nbDestinations++;
+                }
+            }
+            else
+            {
+                int nbEntrees = parserEntrees(classesSaisies, entrees, 20);
+                int classesValides = 0;
+                
+                for (int i = 0; i < nbEntrees; i++)
+                {
+                    if (verifierClasse(entrees[i]))
+                    {
+                        destinations[nbDestinations].type = TYPE_CLASSE;
+                        strcpy(destinations[nbDestinations].nom, entrees[i]);
+                        nbDestinations++;
+                        classesValides++;
+                    }
+                    else
+                    {
+                        printf("Classe '%s' introuvable.\n", entrees[i]);
+                    }
+                }
+                
+                if (classesValides == 0)
+                {
+                    printf("Aucune classe valide specifiee.\n");
+                    nbDestinations = 0;
+                }
+            }
         }
         break;
 
@@ -297,8 +595,9 @@ int main(int argc, char *argv[])
     /* Afficher l'OS detecte */
     printf("Systeme detecte: %s\n", getNomOS());
 
-    /* Initialiser les fichiers */
+    /* Initialiser les fichiers et charger les donnees */
     initialiserFichiers();
+    chargerDonnees();
 
     /* Declarations des variables */
     Utilisateur *tableauUtilisateurs[MAX_UTILISATEURS] = {NULL};
