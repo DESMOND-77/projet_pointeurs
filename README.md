@@ -17,7 +17,7 @@
 
 ## Introduction
 
-Ce projet représente un système de messagerie interne développé en langage C pour un environnement éducatif (établissement d'enseignement supérieur). Il a été conçu dans le cadre d'un projet académique visant à mettre en pratique les concepts de la programmation avancée, notamment la gestion de la mémoire, la manipulation de fichiers, et la programmation modulaire.
+Ce projet représente un système de messagerie interne développé en langage C pour un environnement éducatif (établissement d'enseignement supérieur). Il a été conçu dans le cadre d'un projet académique visant à mettre en pratique les concepts de la programmation avancée, notamment la gestion de la mémoire, l'utilisation des pointeur, la manipulation de fichiers, et la programmation modulaire.
 
 Le système permet aux utilisateurs de s'authentifier et d'envoyer des messages à différents groupes au sein de l'établissement, en fonction de leur statut hiérarchique. Cette approche basée sur les rôles garantit que chaque utilisateur dispose des droits appropriés pour communiquer avec les bonnes personnes.
 
@@ -38,11 +38,11 @@ Ce projet a été développé pour démontrer plusieurs compétences essentielle
 
 ### Contexte d'Utilisation
 
-Le système est conçu pour un établissement d'enseignement supérieur composed de plusieurs directions, départements et classes. Il permet la communication interne entre les différents acteurs de l'institution :
+Le système est conçu pour un établissement d'enseignement supérieur compose de plusieurs directions, départements et classes. Il permet la communication interne entre les différents acteurs de l'institution :
 
 - La **Direction** gère l'établissement dans sa globalité
-- Les **Départements** (Informatique, Mathématiques, Physique) regroupent les filières d'enseignement
-- Les **Classes** (GL, GEII, GIM, etc.) constituent les groupes d'étudiants
+- Les **Départements** (Informatique, Mathématiques, Physique, etc.) regroupent les filières d'enseignement
+- Les **Classes** (GRT, GEII, GIM, etc.) constituent les groupes d'étudiants
 
 ---
 
