@@ -1,4 +1,4 @@
-# Système de Messagerie Interne - Fafa
+# Système de Messagerie Interne
 
 ## Table des Matières
 

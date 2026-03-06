@@ -29,7 +29,7 @@
 
 - [x] Fonctions de gestion des permissions
 - [x] Fonctions d'envoi de messages
-- [x] Fonctions de réception/lecture des messages
+- [ ] Fonctions de réception/lecture des messages
 
 ## Phase 6: Programme Principal
 
